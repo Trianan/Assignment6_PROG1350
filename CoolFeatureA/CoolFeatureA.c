@@ -1,4 +1,4 @@
-/* 
+/*
     FILE: CoolFeatureA.c
     AUTHOR: Tristin A. Manson
     FIRST-VERSION: April 13th, 2024
