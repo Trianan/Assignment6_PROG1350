@@ -9,7 +9,7 @@
 // ----------------------------------------------------------------------------
 #include <stdio.h>
 
-const double TAX_RATE = 0.205;
+const double TAX_RATES[] = { 0.15, 0.26, 0.33 };
 
 typedef struct {
     unsigned int id;
@@ -19,29 +19,19 @@ typedef struct {
 } Worker;
 
 // ----------------------------------------------------------------------------
-double getGrossPay(Worker*);
-double calculateNetPay(double);
+double calculateNetPay(Worker* worker);
 void printWorker(Worker*);
 
 // ----------------------------------------------------------------------------
 int main(void) {
-
     Worker johnDoe = { 123456, "Carpenter", 26.75, 40.0 };
     printWorker(&johnDoe);
-    printf("Gross pay for %u (%.1lf hours): ", johnDoe.id, johnDoe.currentHours);
-    double johnGrossPay = getGrossPay(&johnDoe);
-    printf("$%.2lf\n", johnGrossPay);
-    printf("\tTake-home pay: $%.2lf\n", calculateNetPay(johnGrossPay));
+    printf("John's gross pay: $%.2lf\n", johnDoe.hourlyWage * johnDoe.currentHours);
+    printf("John's net pay: $%.2lf\n", calculateNetPay(&johnDoe));
     return 0;
 }
 
 // ----------------------------------------------------------------------------
-double getGrossPay(Worker* worker) {
-    double hoursWorked = worker->currentHours;
-    worker->currentHours = 0.0;
-    return hoursWorked * worker->hourlyWage;
-}
-
 void printWorker(Worker* worker) {
     printf(
         "Worker ID: %u\n  Trade: %s\n  Wage: $%.2lf\n  Current hours worked: %.1lf\n",
@@ -52,6 +42,19 @@ void printWorker(Worker* worker) {
     );
 }
 
-double calculateNetPay(double grossPay) {
-    return grossPay - (grossPay * TAX_RATE);
+double calculateNetPay(Worker* worker) {
+    double hoursWorked = worker->currentHours;
+    double wage = worker->hourlyWage;
+    double grossPay = hoursWorked * wage;
+    if (wage < 26.86) {
+        return grossPay - (grossPay * TAX_RATES[0]);
+    }
+    if (wage > 26.86 && wage < 83.27) {
+        return grossPay - (grossPay * TAX_RATES[1]);
+    }
+    if (wage > 83.27) {
+        return grossPay - (grossPay * TAX_RATES[2]);
+    }
+    worker->currentHours = 0.0;
+    return -1.0;
 }
