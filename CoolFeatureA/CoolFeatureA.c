@@ -12,6 +12,7 @@
 const double TAX_RATES[] = { 0.15, 0.26, 0.33 };
 
 typedef struct {
+    char* name;
     unsigned int id;
     char* trade;
     double hourlyWage;
@@ -24,17 +25,18 @@ void printWorker(Worker*);
 
 // ----------------------------------------------------------------------------
 int main(void) {
-    Worker johnDoe = { 123456, "Carpenter", 26.75, 40.0 };
+    Worker johnDoe = { "John Doe", 123456, "Carpenter", 26.75, 40.0 };
     printWorker(&johnDoe);
-    printf("John's gross pay: $%.2lf\n", johnDoe.hourlyWage * johnDoe.currentHours);
-    printf("John's net pay: $%.2lf\n", calculateNetPay(&johnDoe));
+    printf("%s's gross pay: $%.2lf\n", johnDoe.name, johnDoe.hourlyWage * johnDoe.currentHours);
+    printf("%s's net pay: $%.2lf\n", johnDoe.name, calculateNetPay(&johnDoe));
     return 0;
 }
 
 // ----------------------------------------------------------------------------
 void printWorker(Worker* worker) {
     printf(
-        "Worker ID: %u\n  Trade: %s\n  Wage: $%.2lf\n  Current hours worked: %.1lf\n",
+        "Name: %s\n  ID: %u\n  Trade: %s\n  Wage: $%.2lf\n  Current hours worked: %.1lf\n",
+        worker->name,
         worker->id,
         worker->trade,
         worker->hourlyWage,
